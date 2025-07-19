@@ -213,14 +213,19 @@
             padding: 15px;
             border-radius: 15px;
             text-align: center;
-            margin-top: 15px;
-            transform: translateX(-100%);
-            transition: all 0.5s ease;
+            margin-bottom: 20px;
+            transform: translateY(-100px);
+            opacity: 0;
+            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
             box-shadow: 0 10px 20px rgba(245, 101, 101, 0.3);
+            max-height: 0;
+            overflow: hidden;
         }
 
         .error-message.show {
-            transform: translateX(0);
+            transform: translateY(0);
+            opacity: 1;
+            max-height: 100px;
         }
 
         .formula-info {
@@ -306,6 +311,10 @@
                 <p class="app-subtitle">Calcola il peso del cibo cotto</p>
             </div>
 
+            <div id="error" class="error-message">
+                <span id="errorText">⚠️ Compila tutti i campi con valori validi</span>
+            </div>
+
             <form id="calculatorForm">
                 <div class="input-group">
                     <label class="input-label" for="rawWeight">Peso cibo crudo</label>
@@ -343,10 +352,6 @@
             <div id="result" class="result-card">
                 <div class="result-value" id="resultValue">0 gr</div>
                 <div class="result-label">Porzione cotta</div>
-            </div>
-
-            <div id="error" class="error-message">
-                <span id="errorText">⚠️ Compila tutti i campi con valori validi</span>
             </div>
 
             <div class="formula-info">
