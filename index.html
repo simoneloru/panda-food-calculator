@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🐼 Panda Food Calculator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .floating-panda {
+            position: absolute;
+            font-size: 40px;
+            animation: float 6s ease-in-out infinite;
+            z-index: 1;
+            opacity: 0.3;
+        }
+
+        .floating-panda:nth-child(1) { top: 10%; left: 10%; animation-delay: 0s; }
+        .floating-panda:nth-child(2) { top: 20%; right: 15%; animation-delay: 2s; }
+        .floating-panda:nth-child(3) { bottom: 30%; left: 20%; animation-delay: 4s; }
+        .floating-panda:nth-child(4) { bottom: 20%; right: 10%; animation-delay: 1s; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        .app-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 25px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            animation: slideUp 0.8s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .panda-logo {
+            font-size: 60px;
+            margin-bottom: 10px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+
+        .app-title {
+            color: #2d3748;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .app-subtitle {
+            color: #718096;
+            font-size: 14px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-label {
+            display: block;
+            color: #4a5568;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .input-container {
+            position: relative;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e2e8f0;
+            border-radius: 15px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: #f7fafc;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.1);
+        }
+
+        .input-unit {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #a0aec0;
+            font-weight: 600;
+            pointer-events: none;
+        }
+
+        .calculate-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 15px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 25px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .calculate-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(102, 126, 234, 0.3);
+        }
+
+        .calculate-btn:active {
+            transform: translateY(-1px);
+        }
+
+        .calculate-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .calculate-btn:hover::before {
+            left: 100%;
+        }
+
+        .result-card {
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 20px;
+            text-align: center;
+            margin-top: 20px;
+            transform: scale(0);
+            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            box-shadow: 0 10px 30px rgba(72, 187, 120, 0.3);
+        }
+
+        .result-card.show {
+            transform: scale(1);
+        }
+
+        .result-value {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 5px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .result-label {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .error-message {
+            background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 15px;
+            text-align: center;
+            margin-top: 15px;
+            transform: translateX(-100%);
+            transition: all 0.5s ease;
+            box-shadow: 0 10px 20px rgba(245, 101, 101, 0.3);
+        }
+
+        .error-message.show {
+            transform: translateX(0);
+        }
+
+        .formula-info {
+            background: rgba(102, 126, 234, 0.1);
+            border: 1px solid rgba(102, 126, 234, 0.2);
+            border-radius: 15px;
+            padding: 15px;
+            margin-top: 20px;
+            font-size: 12px;
+            color: #4a5568;
+            text-align: center;
+        }
+
+        .clear-btn {
+            width: 100%;
+            padding: 12px;
+            background: transparent;
+            color: #a0aec0;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .clear-btn:hover {
+            border-color: #cbd5e0;
+            color: #718096;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                margin: 10px;
+            }
+            
+            .app-card {
+                padding: 20px;
+                border-radius: 20px;
+            }
+            
+            .panda-logo {
+                font-size: 50px;
+            }
+            
+            .app-title {
+                font-size: 20px;
+            }
+            
+            .floating-panda {
+                font-size: 30px;
+            }
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 10px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Panda fluttuanti -->
+    <div class="floating-panda">🐼</div>
+    <div class="floating-panda">🥟</div>
+    <div class="floating-panda">🐼</div>
+    <div class="floating-panda">🍚</div>
+
+    <div class="container">
+        <div class="app-card">
+            <div class="header">
+                <div class="panda-logo">🐼</div>
+                <h1 class="app-title">Panda Food Calculator</h1>
+                <p class="app-subtitle">Calcola il peso del cibo cotto</p>
+            </div>
+
+            <form id="calculatorForm">
+                <div class="input-group">
+                    <label class="input-label" for="rawWeight">Peso cibo crudo</label>
+                    <div class="input-container">
+                        <input type="number" id="rawWeight" class="input-field" placeholder="es. 100" step="0.1" min="0">
+                        <span class="input-unit">gr</span>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label" for="cookedWeight">Peso cibo cotto</label>
+                    <div class="input-container">
+                        <input type="number" id="cookedWeight" class="input-field" placeholder="es. 80" step="0.1" min="0">
+                        <span class="input-unit">gr</span>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label" for="portionRaw">La mia porzione cruda</label>
+                    <div class="input-container">
+                        <input type="number" id="portionRaw" class="input-field" placeholder="es. 50" step="0.1" min="0">
+                        <span class="input-unit">gr</span>
+                    </div>
+                </div>
+
+                <button type="submit" class="calculate-btn" id="calculateBtn">
+                    <span id="btnText">🐼 Calcola Porzione Cotta</span>
+                </button>
+
+                <button type="button" class="clear-btn" onclick="clearForm()">
+                    🧹 Pulisci tutto
+                </button>
+            </form>
+
+            <div id="result" class="result-card">
+                <div class="result-value" id="resultValue">0 gr</div>
+                <div class="result-label">Porzione cotta</div>
+            </div>
+
+            <div id="error" class="error-message">
+                <span id="errorText">⚠️ Compila tutti i campi con valori validi</span>
+            </div>
+
+            <div class="formula-info">
+                <strong>💡 Formula:</strong> (Porzione cruda ÷ Peso crudo totale) × Peso cotto totale
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let isCalculating = false;
+
+        document.getElementById('calculatorForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            calculatePortion();
+        });
+
+        function calculatePortion() {
+            if (isCalculating) return;
+            
+            const rawWeight = parseFloat(document.getElementById('rawWeight').value);
+            const cookedWeight = parseFloat(document.getElementById('cookedWeight').value);
+            const portionRaw = parseFloat(document.getElementById('portionRaw').value);
+            
+            const errorDiv = document.getElementById('error');
+            const resultDiv = document.getElementById('result');
+            
+            // Reset previous states
+            errorDiv.classList.remove('show');
+            resultDiv.classList.remove('show');
+            
+            // Validazione input
+            if (!rawWeight || !cookedWeight || !portionRaw || rawWeight <= 0 || cookedWeight <= 0 || portionRaw <= 0) {
+                showError('⚠️ Inserisci valori validi maggiori di zero');
+                return;
+            }
+            
+            if (portionRaw > rawWeight) {
+                showError('🤔 La porzione cruda non può essere maggiore del peso totale crudo');
+                return;
+            }
+            
+            // Mostra loading
+            showLoading();
+            
+            // Simula elaborazione (per UX migliore)
+            setTimeout(() => {
+                // Calcolo: (porzione_cruda / peso_crudo_totale) * peso_cotto_totale
+                const cookedPortion = (portionRaw / rawWeight) * cookedWeight;
+                const roundedResult = Math.round(cookedPortion * 10) / 10; // Arrotonda a 1 decimale
+                
+                showResult(roundedResult);
+                hideLoading();
+            }, 1000);
+        }
+
+        function showResult(value) {
+            const resultDiv = document.getElementById('result');
+            const resultValue = document.getElementById('resultValue');
+            
+            resultValue.textContent = `${value} gr`;
+            resultDiv.classList.add('show');
+            
+            // Aggiungi effetto celebrativo se il risultato è buono
+            if (value > 0) {
+                addCelebrationEffect();
+            }
+        }
+
+        function showError(message) {
+            const errorDiv = document.getElementById('error');
+            const errorText = document.getElementById('errorText');
+            
+            errorText.textContent = message;
+            errorDiv.classList.add('show');
+            
+            // Auto-hide dopo 4 secondi
+            setTimeout(() => {
+                errorDiv.classList.remove('show');
+            }, 4000);
+        }
+
+        function showLoading() {
+            isCalculating = true;
+            const btn = document.getElementById('calculateBtn');
+            const btnText = document.getElementById('btnText');
+            
+            btn.style.background = 'linear-gradient(135deg, #a0aec0 0%, #718096 100%)';
+            btnText.innerHTML = '<span class="loading"></span>Calcolando...';
+            btn.disabled = true;
+        }
+
+        function hideLoading() {
+            isCalculating = false;
+            const btn = document.getElementById('calculateBtn');
+            const btnText = document.getElementById('btnText');
+            
+            btn.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+            btnText.innerHTML = '🐼 Calcola Porzione Cotta';
+            btn.disabled = false;
+        }
+
+        function clearForm() {
+            document.getElementById('calculatorForm').reset();
+            document.getElementById('result').classList.remove('show');
+            document.getElementById('error').classList.remove('show');
+            
+            // Animazione di pulizia
+            const inputs = document.querySelectorAll('.input-field');
+            inputs.forEach((input, index) => {
+                setTimeout(() => {
+                    input.style.transform = 'scale(1.05)';
+                    setTimeout(() => {
+                        input.style.transform = 'scale(1)';
+                    }, 150);
+                }, index * 100);
+            });
+        }
+
+        function addCelebrationEffect() {
+            // Crea panda celebrativi temporanei
+            for (let i = 0; i < 5; i++) {
+                setTimeout(() => {
+                    createFloatingPanda();
+                }, i * 200);
+            }
+        }
+
+        function createFloatingPanda() {
+            const panda = document.createElement('div');
+            panda.innerHTML = '🎉';
+            panda.style.position = 'fixed';
+            panda.style.fontSize = '30px';
+            panda.style.left = Math.random() * window.innerWidth + 'px';
+            panda.style.top = window.innerHeight + 'px';
+            panda.style.zIndex = '1000';
+            panda.style.pointerEvents = 'none';
+            panda.style.transition = 'all 3s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+            
+            document.body.appendChild(panda);
+            
+            setTimeout(() => {
+                panda.style.transform = `translateY(-${window.innerHeight + 200}px) rotate(720deg)`;
+                panda.style.opacity = '0';
+            }, 100);
+            
+            setTimeout(() => {
+                document.body.removeChild(panda);
+            }, 3100);
+        }
+
+        // Aggiungi supporto per Enter sui campi input
+        document.querySelectorAll('.input-field').forEach(input => {
+            input.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    calculatePortion();
+                }
+            });
+        });
+
+        // Animazione di benvenuto
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.querySelector('.panda-logo').style.animation = 'bounce 2s infinite';
+            }, 500);
+        });
+    </script>
+</body>
+</html>
