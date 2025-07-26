@@ -37,32 +37,8 @@ Nel file `index.html`, cerca questi selettori CSS per modificare i colori:
 - `.calculate-btn` - Pulsante di calcolo
 - `body` - Gradiente di sfondo
 
-### Aggiungere più validazioni
-Nella funzione `calculatePortion()` puoi aggiungere controlli aggiuntivi come:
-```javascript
-if (cookedWeight > rawWeight * 1.5) {
-    showError('🤔 Il peso cotto sembra troppo alto rispetto al crudo');
-    return;
-}
-```
-
 ### Modificare le animazioni
 Puoi personalizzare le animazioni CSS modificando i `@keyframes` nel tag `<style>`.
-
-## 🐛 Risoluzione problemi
-
-### L'app non si carica
-- Verifica che il file si chiami esattamente `index.html`
-- Controlla che GitHub Pages sia attivato nelle impostazioni
-- Aspetta 5-10 minuti dopo l'attivazione
-
-### Il calcolo non funziona
-- Apri gli strumenti per sviluppatori (F12) per vedere eventuali errori
-- Verifica che tutti gli input abbiano valori numerici validi
-
-### Su mobile non funziona bene
-- L'app è ottimizzata per mobile, ma assicurati che il viewport sia configurato correttamente
-- Il meta tag viewport è già incluso nel codice
 
 ## 📱 Compatibilità
 
