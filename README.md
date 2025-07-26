@@ -1,15 +1,12 @@
 # 🐼 Panda Food Calculator
 
-Una bellissima app web responsive per calcolare il peso del cibo una volta cotto, con un'interfaccia mobile-friendly decorata con simpatici panda!
+Una app web responsive per calcolare il peso del cibo una volta cotto.
 
 ## 📱 Caratteristiche
 
 - **Calcolo automatico** del peso della porzione cotta
 - **Design responsive** ottimizzato per dispositivi mobile
-- **Interfaccia moderna** con glassmorphism e animazioni fluide
-- **Tema panda** con animazioni divertenti
 - **Validazione input** intelligente
-- **Effetti celebrativi** quando si ottiene un risultato
 
 ## 🧮 Formula di calcolo
 
